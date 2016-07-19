@@ -29,7 +29,6 @@ bl_info = {
     "warning": ""
 }
 
-
 if "bpy" in locals():
     import importlib
     importlib.reload(ui)
@@ -42,11 +41,18 @@ else:
             IntProperty,
             PointerProperty,
             )
+
     from bpy.types import (
             Operator,
             AddonPreferences,
             PropertyGroup,
             )
+
+    from bpy.utils import (
+            register_class,
+            unregister_class
+            )
+
     from . import (
             ui,
             operators,
@@ -96,25 +102,18 @@ class ImportMDSettings(PropertyGroup):
 
 classes = (
     ui.ImportMDTrajectoryToolBarObject,
-
     operators.MDTrajectoryImport,
-
     ImportMDSettings,
     )
-
-
 def register():
     for cls in classes:
-        #try:
-        bpy.utils.register_class(cls)
-        #except RuntimeError:
-        #    print('Was registered');
+        register_class(cls)
 
     bpy.types.Scene.import_md_trajectory = PointerProperty(type=ImportMDSettings)
 
 
 def unregister():
     for cls in classes:
-        bpy.utils.unregister_class(cls)
+        unregister_class(cls)
 
     del bpy.types.Scene.import_md_trajectory
