@@ -28,11 +28,6 @@ class ImportMDTrajectoryToolBar:
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'TOOLS'
 
-    @classmethod
-    def poll(cls, context):
-        obj = context.active_object
-        return (obj and obj.type == 'MESH')
-
     def draw(self, context):
         scene = context.scene;
         import_md_trajectory = scene.import_md_trajectory
