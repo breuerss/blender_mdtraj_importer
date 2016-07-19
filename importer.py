@@ -92,7 +92,7 @@ def createRepresentationForBlender(subsetTrajectory, element, createdObjects):
     addKeyframesToMeshFromPositions(meshObject.data, positions[1:]);
     createdObjects.append(meshObject.name);
 
-def getPreparedTrajectoryFromFiles(trajFile, topolFile, subsetString, smooth):
+def getPreparedTrajectoryFromFiles(trajFile, topolFile, subsetString, smoothen):
     print('Loading trajectory from %s with topology %s.' % (trajFile, topolFile));
     subsetTrajectory = md.load_xtc(trajFile, top = topolFile);
 
@@ -104,9 +104,9 @@ def getPreparedTrajectoryFromFiles(trajFile, topolFile, subsetString, smooth):
     print('Center trajectory');
     subsetTrajectory.center_coordinates();
 
-    if smooth:
+    if smoothen:
         print('Smoothen trajectory.');
-        subsetTrajectory.smooth(2, inplace=True);
+        subsetTrajectory.smooth(4, inplace=True);
 
     return subsetTrajectory;
 
