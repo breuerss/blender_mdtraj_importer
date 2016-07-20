@@ -20,8 +20,8 @@
 
 bl_info = {
     "name": "Import MD Trajectory",
-    "category": "Import-Export",
-    "description": "Loading MD trajectories from files the are supported by mdtraj",
+    "category": "Mesh",
+    "description": "Loading MD trajectories from files that are supported by mdtraj",
     "author": "Sebastian Breuers",
     "version": (1, 0),
     "blender": (2, 60, 0),
