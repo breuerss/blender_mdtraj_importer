@@ -22,6 +22,7 @@
 
 import bpy
 from bpy.types import Operator
+from importlib import reload
 #
 # ------
 # Export
@@ -33,8 +34,17 @@ class MDTrajectoryImport(Operator):
 
     def execute(self, context):
         from . import importer
+        reload(importer)
 
-        importer.import_trajectory(context)
+
+        import_md_trajectory = context.scene.import_md_trajectory
+        importer = importer.MDTrajectoryImporter(context,
+                bpy.path.abspath(import_md_trajectory.trajFile),
+                bpy.path.abspath(import_md_trajectory.topolFile),
+                import_md_trajectory.subsetSelectionString,
+                import_md_trajectory.smoothTrajectory,
+                import_md_trajectory.timeFactorPerFrame)
+        importer.import_trajectory()
 
         #info = []
         #ret = export.write_mesh(context, info, self.report)
