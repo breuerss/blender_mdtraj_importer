@@ -154,15 +154,16 @@ def addObjectsToGroup (objectNames, groupName):
 def createRepresentationForBlender(subsetTrajectory, element, createdObjects):
     print('Operate on element %s.' % element.name);
     indices = subsetTrajectory.topology.select('element %s' % element.symbol);
-    positions = subsetTrajectory.atom_slice(indices).xyz;
+    if len(indices) != 0:
+        positions = subsetTrajectory.atom_slice(indices).xyz;
 
-    meshObject = createMeshForPositions(positions[0], element);
-    bpy.context.scene.objects.link(meshObject)
-    ball = getAtomRepresentation(element);
-    ball.parent = meshObject
+        meshObject = createMeshForPositions(positions[0], element);
+        bpy.context.scene.objects.link(meshObject)
+        ball = getAtomRepresentation(element);
+        ball.parent = meshObject
 
-    addKeyframesToMeshFromPositions(meshObject.data, positions[1:]);
-    createdObjects.append(meshObject.name);
+        addKeyframesToMeshFromPositions(meshObject.data, positions[1:]);
+        createdObjects.append(meshObject.name);
 
 def getPreparedTrajectoryFromFiles(trajFile, topolFile, subsetString, smoothen):
     print('Loading trajectory from %s with topology %s.' % (trajFile, topolFile));
