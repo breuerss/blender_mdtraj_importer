@@ -133,9 +133,21 @@ def getAtomRepresentation (element):
     return ball;
 
 def addObjectsToGroup (objectNames, groupName):
-    bpy.ops.object.select_all(action = 'DESELECT')  
+    bpy.ops.object.select_all(action = 'DESELECT')
     for name in objectNames:
         bpy.data.objects[name].select = True
+
+    print('Making animation curves cyclic');
+    for window in bpy.context.window_manager.windows:
+        screen = window.screen
+
+        for area in screen.areas:
+            if area.type == 'VIEW_3D':
+                area.type = 'GRAPH_EDITOR'
+                override = {'window': window, 'screen': screen, 'area': area}
+                bpy.ops.graph.extrapolation_type(override, type = 'MAKE_CYCLIC')
+                area.type = 'VIEW_3D'
+                break
 
     bpy.ops.group.create(name = groupName)
 
