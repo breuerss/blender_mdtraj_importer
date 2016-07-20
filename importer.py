@@ -167,7 +167,7 @@ def createRepresentationForBlender(subsetTrajectory, element, createdObjects):
 
 def getPreparedTrajectoryFromFiles(trajFile, topolFile, subsetString, smoothen):
     print('Loading trajectory from %s with topology %s.' % (trajFile, topolFile));
-    subsetTrajectory = md.load_xtc(trajFile, top = topolFile);
+    subsetTrajectory = md.load(trajFile, top = topolFile);
 
     if subsetString:
         print('Create subset.');
