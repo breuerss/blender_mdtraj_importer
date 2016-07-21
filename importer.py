@@ -203,7 +203,6 @@ class MDTrajectoryImporter:
         return subsetTrajectory;
 
     def import_trajectory (self):
-        print('Nnew')
         subsetTrajectory = self.getPreparedTrajectoryFromFiles(
                 self.trajFile,
                 self.topolFile,
