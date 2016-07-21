@@ -16,13 +16,13 @@
 #
 # ##### END GPL LICENSE BLOCK #####
 
-# <pep8-80 compliant>
-
-# All Operator
-
 import bpy
 from bpy.types import Operator
 from importlib import reload
+from . import exceptions
+from . import importer
+reload(importer)
+reload(exceptions)
 #
 # ------
 # Export
@@ -33,12 +33,10 @@ class MDTrajectoryImport(Operator):
     bl_label = "Import MD Trajectory"
 
     def execute(self, context):
-        from . import importer
-        reload(importer)
 
 
         import_md_trajectory = context.scene.import_md_trajectory
-        importer = importer.MDTrajectoryImporter(context,
+        MDImporter = importer.MDTrajectoryImporter(context,
                 bpy.path.abspath(import_md_trajectory.trajFile),
                 bpy.path.abspath(import_md_trajectory.topolFile),
                 import_md_trajectory.subsetSelectionString,
@@ -46,7 +44,12 @@ class MDTrajectoryImport(Operator):
                 import_md_trajectory.smoothTrajectory,
                 import_md_trajectory.cyclicTrajectory,
                 import_md_trajectory.timeFactorPerFrame)
-        importer.import_trajectory()
+
+        try:
+            MDImporter.import_trajectory()
+        except exceptions.ErrorMessageException as e:
+            self.report({'ERROR'}, str(e))
+            return {'CANCELLED'}
 
         #info = []
         #ret = export.write_mesh(context, info, self.report)

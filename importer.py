@@ -18,8 +18,13 @@
 #
 import bpy
 
+from os.path import isfile
 import mdtraj as md
 from mdtraj.core.element import *
+from importlib import reload
+from . import exceptions
+reload(exceptions)
+
 
 class MDTrajectoryImporter: 
     defaultColor = (0.080, 0.005, 0.182, 1)
@@ -198,7 +203,15 @@ class MDTrajectoryImporter:
 
     def getPreparedTrajectoryFromFiles (self, trajFile, topolFile, subsetString, smoothen):
         print('Loading trajectory from %s with topology %s.' % (trajFile, topolFile))
-        subsetTrajectory = md.load(trajFile, top = topolFile)
+        top = topolFile
+        if topolFile == '':
+            top = None
+
+        try:
+            subsetTrajectory = md.load(trajFile, top = top)
+        except Exception as e:
+            message = 'Problems loading trajectory with message: "%s"' % str(e)
+            raise exceptions.ErrorMessageException(message)
 
         if subsetString:
             print('Create subset.')
@@ -214,7 +227,15 @@ class MDTrajectoryImporter:
 
         return subsetTrajectory
 
+    def checkInput(self):
+        errorException = exceptions.ErrorMessageException
+        if not self.trajFile:
+            raise errorException('No trajectory filename given')
+        if not isfile(self.trajFile):
+            raise errorException('The trajectory file does not exist')
+
     def import_trajectory (self):
+        self.checkInput()
         subsetTrajectory = self.getPreparedTrajectoryFromFiles(
                 self.trajFile,
                 self.topolFile,
