@@ -28,7 +28,7 @@ class MDTrajectoryImporter:
             'nitrogen': (0.026, 0.322, 0.8, 1),
             'carbon': (0.337, 0.378, 0.387, 1),
             'oxygen': (0.8, 0.006, 0.037, 1),
-            'sulfur': (0.8, 0.006, 0.037, 1),
+            'sulfur': (1., 1., 0.038, 1),
             }
 
     elements = [Element.getByAtomicNumber(i) for i in range(116)]
