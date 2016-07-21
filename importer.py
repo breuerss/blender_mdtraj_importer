@@ -38,6 +38,7 @@ class MDTrajectoryImporter:
             trajFile = '',
             topolFile = '',
             subsetSelectionString = '',
+            groupName = 'MD Trajectory',
             smoothTrajectory = True,
             cyclicTrajectory = True,
             timeFactorPerFrame = 1):
@@ -46,6 +47,8 @@ class MDTrajectoryImporter:
         self.topolFile = topolFile
 
         self.subsetSelectionString = subsetSelectionString
+        self.groupName = groupName
+
         self.smoothTrajectory = smoothTrajectory
         self.cyclicTrajectory = cyclicTrajectory
         self.timeFactorPerFrame = timeFactorPerFrame
@@ -223,4 +226,4 @@ class MDTrajectoryImporter:
         for element in self.elements:
             self.createRepresentationForBlender(subsetTrajectory, element, createdObjects)
 
-        self.addObjectsToGroup (createdObjects, 'My trajectory')
+        self.addObjectsToGroup (createdObjects, self.groupName)

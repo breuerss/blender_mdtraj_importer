@@ -106,6 +106,13 @@ class ImportMDSettings(PropertyGroup):
         description = "Time distance between frames"
         )
 
+    groupName = StringProperty(
+            name = "Group name",
+            default = "MD Trajectory",
+            description = "The name that should be assigned to the created group"
+            )
+
+
 classes = (
     ui.ImportMDTrajectoryToolBarObject,
     operators.MDTrajectoryImport,
