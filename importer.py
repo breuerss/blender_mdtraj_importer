@@ -150,7 +150,11 @@ class MDTrajectoryImporter:
     def addObjectsToGroup (self, objectNames, groupName):
         bpy.ops.object.select_all(action = 'DESELECT')
         for name in objectNames:
-            bpy.data.objects[name].select = True
+            obj = bpy.data.objects[name]
+            for child in obj.children:
+                if child.parent == obj:
+                    child.select = True
+            obj.select = True
 
         print('Making animation curves cyclic');
         for window in self.context.window_manager.windows:
