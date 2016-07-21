@@ -43,6 +43,7 @@ class MDTrajectoryImport(Operator):
                 bpy.path.abspath(import_md_trajectory.topolFile),
                 import_md_trajectory.subsetSelectionString,
                 import_md_trajectory.smoothTrajectory,
+                import_md_trajectory.cyclicTrajectory,
                 import_md_trajectory.timeFactorPerFrame)
         importer.import_trajectory()
 

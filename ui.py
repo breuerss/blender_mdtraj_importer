@@ -33,20 +33,27 @@ class ImportMDTrajectoryToolBar:
         import_md_trajectory = scene.import_md_trajectory
 
         layout = self.layout
+        # File options
         row = layout.row()
+        box = layout.box()
+        row = box.row()
         row.label("File input")
-        row = layout.row(align=True)
+        row = box.row(align=True)
         row.prop(import_md_trajectory, "trajFile")
-        row = layout.row(align=True)
+        row = box.row(align=True)
         row.prop(import_md_trajectory, "topolFile")
         # Balls
         box = layout.box()
         row = box.row()
-        row.label(text="Options")
+        row.label(text="Import options")
         row = box.row()
         row.prop(import_md_trajectory, "subsetSelectionString")
         row = box.row()
+        row.label(text="Trajectory options")
+        row = box.row()
         row.prop(import_md_trajectory, "smoothTrajectory")
+        row = box.row()
+        row.prop(import_md_trajectory, "cyclicTrajectory")
         row = box.row()
         row.prop(import_md_trajectory, "timeFactorPerFrame")
 

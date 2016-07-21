@@ -39,12 +39,15 @@ class MDTrajectoryImporter:
             topolFile = '',
             subsetSelectionString = '',
             smoothTrajectory = True,
+            cyclicTrajectory = True,
             timeFactorPerFrame = 1):
         self.context = context
         self.trajFile = trajFile
         self.topolFile = topolFile
+
         self.subsetSelectionString = subsetSelectionString
         self.smoothTrajectory = smoothTrajectory
+        self.cyclicTrajectory = cyclicTrajectory
         self.timeFactorPerFrame = timeFactorPerFrame
 
     def createMeshForPositions (self, positions, element):
@@ -161,7 +164,8 @@ class MDTrajectoryImporter:
                     break
 
     def handleAnimationModifier (self):
-        self.makeAnimationCyclic()
+        if self.cyclicTrajectory:
+            self.makeAnimationCyclic()
 
     def addObjectsToGroup (self, objectNames, groupName):
         bpy.ops.object.select_all(action = 'DESELECT')

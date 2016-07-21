@@ -93,6 +93,12 @@ class ImportMDSettings(PropertyGroup):
         description = "Interpolate trajectory to avoid high frequency movements",
         )
 
+    cyclicTrajectory = BoolProperty(
+            name = "Make cyclic",
+            default = True,
+            description = "Make the imported trajectory cyclic"
+            )
+
     timeFactorPerFrame = IntProperty(
         name = "Time",
         default=1,
