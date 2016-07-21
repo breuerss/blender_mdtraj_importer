@@ -22,19 +22,16 @@ import mdtraj as md
 from mdtraj.core.element import *
 
 class MDTrajectoryImporter: 
+    defaultColor = (0.080, 0.005, 0.182, 1);
     colorMap = {
             'hydrogen': (1, 1, 1, 1),
             'nitrogen': (0.026, 0.322, 0.8, 1),
             'carbon': (0.337, 0.378, 0.387, 1),
             'oxygen': (0.8, 0.006, 0.037, 1),
+            'sulfur': (0.8, 0.006, 0.037, 1),
             }
 
-    elements = [
-            hydrogen,
-            carbon,
-            oxygen,
-            nitrogen
-            ];
+    elements = [Element.getByAtomicNumber(i) for i in range(116)]
 
     def __init__ (self,
             context = bpy.context,
@@ -95,7 +92,7 @@ class MDTrajectoryImporter:
         # Create base color
         material_baseColor = nodes.new('ShaderNodeBsdfToon')
         self.assignValuesToMaterial(material_baseColor, {
-            'Color': self.colorMap[element.name],
+            'Color': self.colorMap.get(element.name, self.defaultColor),
             'Size': 0.7,
             'Smooth': 0.2
             })
