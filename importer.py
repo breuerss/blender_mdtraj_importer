@@ -147,16 +147,8 @@ class MDTrajectoryImporter:
 
         return ball
 
-    def addObjectsToGroup (self, objectNames, groupName):
-        bpy.ops.object.select_all(action = 'DESELECT')
-        for name in objectNames:
-            obj = bpy.data.objects[name]
-            for child in obj.children:
-                if child.parent == obj:
-                    child.select = True
-            obj.select = True
-
-        print('Making animation curves cyclic');
+    def makeAnimationCyclic (self):
+        print('Making animation curves cyclic')
         for window in self.context.window_manager.windows:
             screen = window.screen
 
@@ -168,6 +160,19 @@ class MDTrajectoryImporter:
                     area.type = 'VIEW_3D'
                     break
 
+    def handleAnimationModifier (self):
+        self.makeAnimationCyclic()
+
+    def addObjectsToGroup (self, objectNames, groupName):
+        bpy.ops.object.select_all(action = 'DESELECT')
+        for name in objectNames:
+            obj = bpy.data.objects[name]
+            for child in obj.children:
+                if child.parent == obj:
+                    child.select = True
+            obj.select = True
+
+        self.handleAnimationModifier()
         bpy.ops.group.create(name = groupName)
 
     def createRepresentationForBlender (self, subsetTrajectory, element, createdObjects):
