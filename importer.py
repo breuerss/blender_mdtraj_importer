@@ -22,7 +22,7 @@ import mdtraj as md
 from mdtraj.core.element import *
 
 class MDTrajectoryImporter: 
-    defaultColor = (0.080, 0.005, 0.182, 1);
+    defaultColor = (0.080, 0.005, 0.182, 1)
     colorMap = {
             'hydrogen': (1, 1, 1, 1),
             'nitrogen': (0.026, 0.322, 0.8, 1),
@@ -40,42 +40,42 @@ class MDTrajectoryImporter:
             subsetSelectionString = '',
             smoothTrajectory = True,
             timeFactorPerFrame = 1):
-        self.context = context;
-        self.trajFile = trajFile;
-        self.topolFile = topolFile;
-        self.subsetSelectionString = subsetSelectionString;
-        self.smoothTrajectory = smoothTrajectory;
-        self.timeFactorPerFrame = timeFactorPerFrame;
+        self.context = context
+        self.trajFile = trajFile
+        self.topolFile = topolFile
+        self.subsetSelectionString = subsetSelectionString
+        self.smoothTrajectory = smoothTrajectory
+        self.timeFactorPerFrame = timeFactorPerFrame
 
     def createMeshForPositions (self, positions, element):
-        atom_vertices = [];
+        atom_vertices = []
         for position in positions:
-            atom_vertices.append(position);
+            atom_vertices.append(position)
 
-        atomMesh = bpy.data.meshes.new("Mesh_" + element.symbol);
-        atomMesh.from_pydata(atom_vertices, [], []);
-        atomMesh.update();
+        atomMesh = bpy.data.meshes.new("Mesh_" + element.symbol)
+        atomMesh.from_pydata(atom_vertices, [], [])
+        atomMesh.update()
 
-        mesh = bpy.data.objects.new(element.name, atomMesh);
+        mesh = bpy.data.objects.new(element.name, atomMesh)
         mesh.dupli_type = 'VERTS'
-        return mesh;
+        return mesh
 
     def insert_keyframe (self, fcurves, frame, positions):
         for fcu, val in zip(fcurves, positions):
             fcu.keyframe_points.insert(frame, val, {'FAST'})
 
     def addKeyframesToMeshFromPositions (self, mesh, frames) :
-        action = bpy.data.actions.new("MeshAnimation");
+        action = bpy.data.actions.new("MeshAnimation")
 
-        mesh.animation_data_create();
-        mesh.animation_data.action = action;
+        mesh.animation_data_create()
+        mesh.animation_data.action = action
 
         data_path = "vertices[%d].co"
 
         for v in mesh.vertices:
             fcurves = [action.fcurves.new(data_path % v.index, i) for i in range(3)]
             for frameIndex, frame in enumerate(frames):
-                self.insert_keyframe(fcurves, frameIndex, frame[v.index]);
+                self.insert_keyframe(fcurves, frameIndex, frame[v.index])
 
     def assignValuesToMaterial (self, material, properties):
         for inputType, value in properties.items():
@@ -86,7 +86,7 @@ class MDTrajectoryImporter:
         material.use_nodes = True
 
         # Remove default
-        nodes = material.node_tree.nodes;
+        nodes = material.node_tree.nodes
         nodes.remove(nodes.get('Diffuse BSDF'))
 
         # Create base color
@@ -122,15 +122,15 @@ class MDTrajectoryImporter:
         links.new(material_mix.inputs[1], material_baseColor.outputs['BSDF'])
         links.new(material_mix.inputs[2], material_rim.outputs['BSDF'])
 
-        return material;
+        return material
 
 
     def getMaterialForElement (self, element):
-        material = bpy.data.materials.get(element.name);
+        material = bpy.data.materials.get(element.name)
         if not material:
             material = self.createMaterialForElement(element)
 
-        return material;
+        return material
 
     def getAtomRepresentation (self, element):
 
@@ -143,9 +143,9 @@ class MDTrajectoryImporter:
         ball.scale  = (element.radius,) * 3
 
         ball.name = "Ball_" + element.name
-        ball.active_material = self.getMaterialForElement(element);
+        ball.active_material = self.getMaterialForElement(element)
 
-        return ball;
+        return ball
 
     def addObjectsToGroup (self, objectNames, groupName):
         bpy.ops.object.select_all(action = 'DESELECT')
@@ -171,36 +171,36 @@ class MDTrajectoryImporter:
         bpy.ops.group.create(name = groupName)
 
     def createRepresentationForBlender (self, subsetTrajectory, element, createdObjects):
-        print('Operate on element %s.' % element.name);
-        indices = subsetTrajectory.topology.select('element %s' % element.symbol);
+        print('Operate on element %s.' % element.name)
+        indices = subsetTrajectory.topology.select('element %s' % element.symbol)
         if len(indices) != 0:
-            positions = subsetTrajectory.atom_slice(indices).xyz;
+            positions = subsetTrajectory.atom_slice(indices).xyz
 
-            meshObject = self.createMeshForPositions(positions[0], element);
+            meshObject = self.createMeshForPositions(positions[0], element)
             self.context.scene.objects.link(meshObject)
-            ball = self.getAtomRepresentation(element);
+            ball = self.getAtomRepresentation(element)
             ball.parent = meshObject
 
-            self.addKeyframesToMeshFromPositions(meshObject.data, positions[1:]);
-            createdObjects.append(meshObject.name);
+            self.addKeyframesToMeshFromPositions(meshObject.data, positions[1:])
+            createdObjects.append(meshObject.name)
 
     def getPreparedTrajectoryFromFiles (self, trajFile, topolFile, subsetString, smoothen):
-        print('Loading trajectory from %s with topology %s.' % (trajFile, topolFile));
-        subsetTrajectory = md.load(trajFile, top = topolFile);
+        print('Loading trajectory from %s with topology %s.' % (trajFile, topolFile))
+        subsetTrajectory = md.load(trajFile, top = topolFile)
 
         if subsetString:
-            print('Create subset.');
-            subsetIndices = subsetTrajectory.topology.select(subsetString);
-            subsetTrajectory = subsetTrajectory.atom_slice(subsetIndices);
+            print('Create subset.')
+            subsetIndices = subsetTrajectory.topology.select(subsetString)
+            subsetTrajectory = subsetTrajectory.atom_slice(subsetIndices)
 
-        print('Center trajectory');
-        subsetTrajectory.center_coordinates();
+        print('Center trajectory')
+        subsetTrajectory.center_coordinates()
 
         if smoothen:
-            print('Smoothen trajectory.');
-            subsetTrajectory.smooth(4, inplace=True);
+            print('Smoothen trajectory.')
+            subsetTrajectory.smooth(4, inplace=True)
 
-        return subsetTrajectory;
+        return subsetTrajectory
 
     def import_trajectory (self):
         subsetTrajectory = self.getPreparedTrajectoryFromFiles(
@@ -208,10 +208,10 @@ class MDTrajectoryImporter:
                 self.topolFile,
                 self.subsetSelectionString,
                 self.smoothTrajectory
-                );
+                )
 
-        createdObjects = [];
+        createdObjects = []
         for element in self.elements:
-            self.createRepresentationForBlender(subsetTrajectory, element, createdObjects);
+            self.createRepresentationForBlender(subsetTrajectory, element, createdObjects)
 
-        self.addObjectsToGroup (createdObjects, 'My trajectory');
+        self.addObjectsToGroup (createdObjects, 'My trajectory')
