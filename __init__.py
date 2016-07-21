@@ -88,7 +88,7 @@ class ImportMDSettings(PropertyGroup):
             )
 
     smoothTrajectory = BoolProperty(
-        name = "Smooth trajectory",
+        name = "Smoothen trajectory",
         default=True,
         description = "Interpolate trajectory to avoid high frequency movements",
         )
