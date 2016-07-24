@@ -188,9 +188,9 @@ class MDTrajectoryImporter:
         bpy.ops.group.create(name = groupName)
 
     def createRepresentationForBlender (self, subsetTrajectory, element, createdObjects):
-        print('Operate on element %s.' % element.name)
         indices = subsetTrajectory.topology.select('element %s' % element.symbol)
         if len(indices) != 0:
+            print('Operate on element %s.' % element.name)
             positions = subsetTrajectory.atom_slice(indices).xyz
 
             meshObject = self.createMeshForPositions(positions[0], element)
