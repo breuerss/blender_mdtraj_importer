@@ -216,6 +216,9 @@ class MDTrajectoryImporter:
         if subsetString:
             print('Create subset.')
             subsetIndices = subsetTrajectory.topology.select(subsetString)
+            if len(subsetIndices) == 0:
+                message = 'Subset created with string: "%s" was empty.' % subsetString
+                raise exceptions.ErrorMessageException(message)
             subsetTrajectory = subsetTrajectory.atom_slice(subsetIndices)
 
         print('Center trajectory')
