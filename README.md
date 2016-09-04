@@ -20,7 +20,9 @@ for Python 3 is necessary.
 On a Ubuntu system this can be done with
 ```shell
 sudo apt-get install python3-pip
-sudo pip3 install scipy cython numpy mdtraj
+for package in scipy cython numpy mdtraj; do
+    sudo pip3 install $package;
+done
 ```
 
 ## Usage Quickstart
