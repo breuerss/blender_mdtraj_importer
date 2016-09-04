@@ -87,9 +87,9 @@ class ImportMDSettings(PropertyGroup):
             default='protein'
             )
 
-    smoothTrajectory = BoolProperty(
+    smoothTrajectory = IntProperty(
         name = "Smoothen trajectory",
-        default=True,
+        default=10,
         description = "Interpolate trajectory to avoid high frequency movements",
         )
 

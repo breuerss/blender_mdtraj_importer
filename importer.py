@@ -224,9 +224,9 @@ class MDTrajectoryImporter:
         print('Center trajectory')
         subsetTrajectory.center_coordinates()
 
-        if smoothen:
+        if smoothen > 0:
             print('Smoothen trajectory.')
-            subsetTrajectory.smooth(4, inplace=True)
+            subsetTrajectory.smooth(smoothen, inplace=True)
 
         return subsetTrajectory
 
