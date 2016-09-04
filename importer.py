@@ -98,7 +98,10 @@ class MDTrajectoryImporter:
 
         # Remove default
         nodes = material.node_tree.nodes
-        nodes.remove(nodes.get('Diffuse BSDF'))
+
+        diffuseNode = nodes.get('Diffuse BSDF')
+        if diffuseNode:
+            nodes.remove(diffuseNode)
 
         # Create base color
         material_baseColor = nodes.new('ShaderNodeBsdfToon')
