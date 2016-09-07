@@ -104,9 +104,16 @@ class MDTrajectoryImporter:
             nodes.remove(diffuseNode)
 
         # Create base color
-        material_baseColor = nodes.new('ShaderNodeBsdfToon')
-        self.assignValuesToMaterial(material_baseColor, {
-            'Color': self.colorMap.get(element.name, self.defaultColor),
+        material_baseColor = nodes.new('ShaderNodeRGB')
+        material_baseColor.outputs['Color'].default_value = self.colorMap.get(element.name, self.defaultColor)
+
+        material_emissionColor = nodes.new('ShaderNodeEmission')
+        self.assignValuesToMaterial(material_emissionColor, {
+            'Strength': 10
+            })
+
+        material_diffuseColor = nodes.new('ShaderNodeBsdfToon')
+        self.assignValuesToMaterial(material_diffuseColor, {
             'Size': 0.7,
             'Smooth': 0.2
             })
@@ -126,15 +133,25 @@ class MDTrajectoryImporter:
             })
 
         # Create mix node
-        material_mix = nodes.new('ShaderNodeMixShader')
+        material_mixRim = nodes.new('ShaderNodeMixShader')
+        material_mixColor = nodes.new('ShaderNodeMixShader')
+        self.assignValuesToMaterial(material_mixColor, {
+            'Fac': 0
+        })
 
         # Bring them together
         material_output = nodes.get('Material Output')
         links = material.node_tree.links
-        links.new(material_output.inputs['Surface'], material_mix.outputs['Shader'])
-        links.new(material_mix.inputs[0], material_fresnel.outputs['Fac'])
-        links.new(material_mix.inputs[1], material_baseColor.outputs['BSDF'])
-        links.new(material_mix.inputs[2], material_rim.outputs['BSDF'])
+        links.new(material_output.inputs['Surface'], material_mixRim.outputs['Shader'])
+        links.new(material_mixRim.inputs[0], material_fresnel.outputs['Fac'])
+        links.new(material_diffuseColor.inputs[0], material_baseColor.outputs['Color'])
+        links.new(material_emissionColor.inputs[0], material_baseColor.outputs['Color'])
+
+        links.new(material_mixColor.inputs[1], material_diffuseColor.outputs['BSDF'])
+        links.new(material_mixColor.inputs[2], material_emissionColor.outputs['Emission'])
+
+        links.new(material_mixRim.inputs[1], material_mixColor.outputs['Shader'])
+        links.new(material_mixRim.inputs[2], material_rim.outputs['BSDF'])
 
         return material
 
