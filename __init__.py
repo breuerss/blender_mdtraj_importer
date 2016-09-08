@@ -90,6 +90,7 @@ class ImportMDSettings(PropertyGroup):
     smoothTrajectory = IntProperty(
         name = "Smoothen trajectory",
         default=10,
+        min = 0,
         description = "Interpolate trajectory to avoid high frequency movements",
         )
 
