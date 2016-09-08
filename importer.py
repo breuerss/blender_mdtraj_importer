@@ -86,7 +86,7 @@ class MDTrajectoryImporter:
         for v in mesh.vertices:
             fcurves = [action.fcurves.new(data_path % v.index, i) for i in range(3)]
             for frameIndex, frame in enumerate(frames):
-                self.insert_keyframe(fcurves, frameIndex, frame[v.index])
+                self.insert_keyframe(fcurves, frameIndex * self.timeFactorPerFrame, frame[v.index])
 
     def assignValuesToMaterial (self, material, properties):
         for inputType, value in properties.items():
